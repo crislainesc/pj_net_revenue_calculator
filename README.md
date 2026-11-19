@@ -4,7 +4,7 @@ Aplicação web em React para estimar a distribuição mensal do faturamento de 
 
 ## Uso
 
-Instale Node.js 22 ou superior e execute `npm ci` e `npm run dev`. Informe o faturamento bruto mensal ou use uma das sugestões rápidas. Os valores são recalculados na hora. Abra **Parâmetros e definição das regras** para ajustar o pró-labore, INSS, DAS e custo mensal de contabilidade; as configurações ficam salvas no `localStorage` do navegador. Use **Copiar resumo** para copiar o detalhamento.
+Instale Node.js 22 ou superior com pnpm e execute `pnpm install --frozen-lockfile` e `pnpm dev`. Informe o faturamento bruto mensal ou use uma das sugestões rápidas. No modo **Calcular por valor/hora**, indique o valor/hora e as horas previstas no mês para preencher o valor bruto da nota automaticamente. Abra **Parâmetros e definição das regras** para ajustar o pró-labore, INSS, DAS e custo mensal de contabilidade; as configurações ficam salvas no `localStorage` do navegador. Use **Copiar resumo** para copiar o detalhamento.
 
 ## Regras padrão
 
@@ -28,7 +28,7 @@ O repositório esperado é `pj_net_revenue_calculator`. O workflow em `.github/w
 3. Nas configurações do repositório, abra **Pages** e selecione **GitHub Actions** como fonte de publicação.
 4. Aguarde a execução do workflow. O endereço ficará no formato `https://SEU_USUARIO.github.io/pj_net_revenue_calculator/`.
 
-O app usa React e Vite. O `base` do Vite está configurado para o caminho do repositório no GitHub Pages.
+O app usa React, TypeScript e Vite. O `base` do Vite está configurado para o caminho do repositório no GitHub Pages.
 
 ## Medidas contra injeção no navegador
 
