@@ -1,10 +1,10 @@
 # Simulador de Faturamento Líquido PJ
 
-Aplicação web estática para estimar a distribuição mensal do faturamento de uma empresa PJ entre pró-labore, INSS, DAS, contabilidade e valor disponível. Toda a interface está em português do Brasil e funciona em celular e desktop.
+Aplicação web em React para estimar a distribuição mensal do faturamento de uma empresa PJ entre pró-labore, INSS, DAS, contabilidade e valor disponível. Toda a interface está em português do Brasil e funciona em celular e desktop.
 
 ## Uso
 
-Abra `index.html` no navegador ou acesse a versão publicada no GitHub Pages. Informe o faturamento bruto mensal ou use uma das sugestões rápidas. Os valores são recalculados na hora. Abra **Parâmetros e definição das regras** para simular outras taxas; as configurações ficam salvas no `localStorage` do navegador. Use **Copiar resumo** para copiar o detalhamento.
+Instale Node.js 22 ou superior e execute `npm ci` e `npm run dev`. Informe o faturamento bruto mensal ou use uma das sugestões rápidas. Os valores são recalculados na hora. Abra **Parâmetros e definição das regras** para ajustar o pró-labore, INSS, DAS e custo mensal de contabilidade; as configurações ficam salvas no `localStorage` do navegador. Use **Copiar resumo** para copiar o detalhamento.
 
 ## Regras padrão
 
@@ -20,11 +20,20 @@ Esta é uma estimativa simplificada para planejamento. A tributação efetiva de
 
 ## Publicação no GitHub Pages
 
-O repositório esperado é `pj_net_revenue_calculator`. O workflow em `.github/workflows/deploy.yml` publica o conteúdo da raiz automaticamente quando há push para `main` (ou execução manual).
+O repositório esperado é `pj_net_revenue_calculator`. O workflow em `.github/workflows/deploy.yml` instala as dependências, gera o bundle de produção e publica `dist` automaticamente quando há push para `main` (ou execução manual).
 
 1. Crie no GitHub um repositório público chamado `pj_net_revenue_calculator`.
 2. Envie este projeto para a branch `main`.
 3. Nas configurações do repositório, abra **Pages** e selecione **GitHub Actions** como fonte de publicação.
 4. Aguarde a execução do workflow. O endereço ficará no formato `https://SEU_USUARIO.github.io/pj_net_revenue_calculator/`.
 
-Não há etapa de build: é um site estático HTML, CSS e JavaScript, servido diretamente pelo GitHub Pages.
+O app usa React e Vite. O `base` do Vite está configurado para o caminho do repositório no GitHub Pages.
+
+## Medidas contra injeção no navegador
+
+- A interface usa renderização declarativa do React; nenhum valor do usuário ou do `localStorage` é inserido como HTML.
+- Não usamos `dangerouslySetInnerHTML`, scripts de terceiros, fontes remotas ou dependências de runtime carregadas por CDN.
+- A política CSP restringe scripts, estilos, conexões e recursos à própria origem, além de bloquear objetos e formulários externos.
+- Valores restaurados do `localStorage` são verificados quanto ao tipo, finitude e limites antes de entrarem nos cálculos.
+
+Estas medidas reduzem riscos de XSS no front-end, mas não substituem revisão contínua de dependências e atualizações de segurança.
