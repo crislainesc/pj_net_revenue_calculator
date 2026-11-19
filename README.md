@@ -13,8 +13,9 @@ Instale Node.js 22 ou superior e execute `npm ci` e `npm run dev`. Informe o fat
 - DAS: 6% sobre o faturamento bruto, como simulação da faixa inicial do Anexo III.
 - Contabilidade: R$ 168,00 fixos por mês.
 - Custos e impostos diretos: INSS + DAS + contabilidade.
-- Líquido após custos diretos: faturamento bruto menos INSS, DAS e contabilidade.
-- Sobra após retirar o pró-labore integral: líquido após custos diretos menos pró-labore.
+- Transferência líquida do pró-labore: pró-labore bruto menos INSS.
+- Distribuição de lucros prevista: faturamento bruto menos DAS, contabilidade e pró-labore bruto.
+- Valor líquido previsto: transferência líquida do pró-labore mais distribuição de lucros.
 
 Esta é uma estimativa simplificada para planejamento. A tributação efetiva depende da atividade, do faturamento acumulado e do enquadramento. Confirme os valores com a contabilidade responsável.
 

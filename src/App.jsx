@@ -62,8 +62,10 @@ function App() {
     const inss = proLabore * settings.inssRate / 100;
     const das = gross * settings.dasRate / 100;
     const directCosts = inss + das + settings.accounting;
-    const afterDirectCosts = gross - directCosts;
-    return { gross, proLabore, inss, das, directCosts, afterDirectCosts, net: afterDirectCosts - proLabore };
+    const profitDistribution = gross - das - settings.accounting - proLabore;
+    const netProLabore = proLabore - inss;
+    const net = netProLabore + profitDistribution;
+    return { gross, proLabore, inss, das, directCosts, profitDistribution, netProLabore, net };
   }, [settings]);
 
   function updateSetting(key, input) {
@@ -96,8 +98,9 @@ function App() {
       `DAS (${number.format(settings.dasRate)}% do faturamento): ${formatMoney(values.das)}`,
       `Contabilidade: ${formatMoney(settings.accounting)}`,
       `Impostos + contabilidade: ${formatMoney(values.directCosts)}`,
-      `Líquido após custos diretos: ${formatMoney(values.afterDirectCosts)}`,
-      `Sobra após retirar pró-labore: ${formatMoney(values.net)}`,
+      `Pró-labore líquido (pró-labore - INSS): ${formatMoney(values.netProLabore)}`,
+      `Distribuição de lucros prevista: ${formatMoney(values.profitDistribution)}`,
+      `Valor líquido previsto (pró-labore líquido + distribuição): ${formatMoney(values.net)}`,
     ].join('\n');
     try {
       await navigator.clipboard.writeText(text);
@@ -123,9 +126,10 @@ function App() {
 
     <section className="summary" aria-label="Resumo do faturamento">
       <Card label="Faturamento bruto" value={values.gross} note="Receita mensal prevista" />
-      <Card label={`Pró-labore (${number.format(settings.proRate)}%)`} value={values.proLabore} note="Retirada simulada do sócio" />
+      <Card label={`Pró-labore (${number.format(settings.proRate)}%)`} value={values.proLabore} note={`Transferência após INSS: ${formatMoney(values.netProLabore)}`} />
       <Card label="Impostos + contabilidade" value={values.directCosts} note="DAS + INSS + contabilidade" />
-      <Card label="Valor líquido previsto" value={values.net} note="Após custos diretos e pró-labore" primary />
+      <Card label="Distribuição de lucros prevista" value={values.profitDistribution} note="Após DAS, contabilidade e pró-labore" />
+      <Card label="Valor líquido previsto" value={values.net} note="Pró-labore líquido + distribuição" primary />
     </section>
 
     <section className="grid">
@@ -139,8 +143,10 @@ function App() {
             <tr><td>INSS sobre pró-labore<span className="detail-sub">Contribuição previdenciária simulada</span></td><td className="rule">{number.format(settings.inssRate)}% sobre pró-labore de {formatMoney(values.proLabore)}</td><td>{formatMoney(values.inss)}</td></tr>
             <tr><td>Imposto DAS<span className="detail-sub">Simulação de faixa inicial do Anexo III</span></td><td className="rule">{number.format(settings.dasRate)}% sobre faturamento bruto</td><td>{formatMoney(values.das)}</td></tr>
             <tr><td>Contabilidade<span className="detail-sub">Custo fixo mensal configurado</span></td><td className="rule">Valor mensal configurado</td><td>{formatMoney(settings.accounting)}</td></tr>
+            <tr><td>Distribuição de lucros prevista<span className="detail-sub">Valor remanescente após despesas e pró-labore</span></td><td className="rule">Faturamento − DAS − contabilidade − pró-labore</td><td>{formatMoney(values.profitDistribution)}</td></tr>
             <tr className="total-row"><td colSpan="2">Custos e impostos diretos (DAS + INSS + contabilidade)</td><td>{formatMoney(values.directCosts)}</td></tr>
-            <tr className="total-row"><td colSpan="2">Líquido após impostos e contabilidade</td><td>{formatMoney(values.afterDirectCosts)}</td></tr>
+            <tr><td>Pró-labore líquido<span className="detail-sub">Pró-labore após desconto do INSS</span></td><td className="rule">Pró-labore − INSS</td><td>{formatMoney(values.netProLabore)}</td></tr>
+            <tr className="total-row"><td colSpan="2">Valor líquido previsto (pró-labore líquido + distribuição)</td><td>{formatMoney(values.net)}</td></tr>
           </tbody></table></div>
         <div className="actions"><button className="copy" type="button" onClick={copySummary}>Copiar resumo</button><span className="saved" role="status">{copied ? 'Resumo copiado.' : 'Parâmetros salvos neste dispositivo.'}</span></div>
       </article>
@@ -148,11 +154,13 @@ function App() {
       <aside className="panel insight">
         <h2>Como o valor se distribui</h2><p>O pró-labore é a retirada do sócio. Os custos diretos são pagos à parte e incluem impostos e contabilidade.</p>
         <div className="split">
-          <div className="split-row"><span>Pró-labore</span><strong>{formatMoney(values.proLabore)}</strong></div>
+          <div className="split-row"><span>Pró-labore bruto</span><strong>{formatMoney(values.proLabore)}</strong></div>
+          <div className="split-row"><span>INSS descontado do pró-labore</span><strong>{formatMoney(values.inss)}</strong></div>
+          <div className="split-row"><span>Pró-labore líquido</span><strong>{formatMoney(values.netProLabore)}</strong></div>
           <div className="split-row"><span>Impostos + contabilidade</span><strong>{formatMoney(values.directCosts)}</strong></div>
-          <div className="split-row"><span>Líquido após custos diretos</span><strong>{formatMoney(values.afterDirectCosts)}</strong></div>
         </div>
-        <div className="final-available"><span>Sobra após retirar pró-labore</span><strong>{formatMoney(values.net)}</strong></div>
+        <div className="split-row"><span>Distribuição de lucros prevista</span><strong>{formatMoney(values.profitDistribution)}</strong></div>
+        <div className="final-available"><span>Valor líquido previsto</span><strong>{formatMoney(values.net)}</strong></div>
       </aside>
     </section>
 
